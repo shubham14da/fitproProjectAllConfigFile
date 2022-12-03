@@ -1,0 +1,47 @@
+---
+- name: install workernode1 server
+  hosts: workernode1
+  remote_user: root
+  tasks: 
+  - name: update system
+    yum:
+      name: "*"
+      state: latest
+  - name: Set a hostname
+    hostname:
+      name: workernode1
+  - name: install docker
+    yum: 
+      name: docker
+      state: present
+  - name: start docker
+    systemd:
+      state: started
+      name: docker
+      enabled: yes
+  - name: Enable repository
+    yum_repository:
+      name: kubernetes
+      description: kubernetes
+      baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+      gpgcheck: yes
+      gpgkey: 
+        - https://packages.cloud.google.com/yum/doc/yum-key.gpg 
+        - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+      exclude:
+        - kubelet 
+        - kubeadm 
+        - kubectl
+  - name: install kubelet kubeadm kubectl
+    yum:
+      name: 
+        - kubelet 
+        - kubeadm 
+        - kubectl
+      disable_excludes: kubernetes
+  - name: Enable kubelet
+    systemd:
+      name: kubelet
+      enabled: yes
+  - name: worker1 join master node
+    shell: "{{hostvars['DUMMY_HOST']['kubetoken']}}"

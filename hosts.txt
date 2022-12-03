@@ -1,0 +1,8 @@
+[jenkins]
+10.0.1.51
+[k8s-master]
+10.0.1.52
+[workernode1]
+10.0.1.53
+[workernode2]
+10.0.1.54
