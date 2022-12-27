@@ -10,6 +10,12 @@
   - name: Set a hostname
     hostname:
       name: k8s-master
+  - name: install git
+    yum: 
+      name: git
+      state: present
+  - name: install java11
+    command: amazon-linux-extras install java-openjdk11 -y
   - name: install docker
     yum: 
       name: docker
